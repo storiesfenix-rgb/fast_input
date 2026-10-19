@@ -1,0 +1,30 @@
+name: CI Pipeline
+
+# Пайплайн запускается при любом пуше в ветку main
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-and-buil:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Скачиваем код репозитория на виртуальную машину GitHub
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2. Настраиваем окружение Docker Compose в облаке
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    # 3. Тестируем сборку контейнеров (проверяем, что наши Dockerfile не сломаны)
+    - name: Test Docker Compose Build
+      run: |
+        docker compose build
+
+    # 4. Выводим сообщение об успешной проверке
+    - name: Verification Success
+      run: echo "Локальная сборка успешно проверена в облаке!"
